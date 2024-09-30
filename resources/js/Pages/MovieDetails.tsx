@@ -44,16 +44,6 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
                                         <InfoItem label="IMDB ID" value={movie.imdb_id} />
                                     </div>
                                     <div className="mt-4">
-                                        <h3 className="text-xl font-semibold mb-2">Genres</h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {movie.genres.map((genre: any) => (
-                                                <span key={genre.id} className="bg-gray-200 rounded-full px-3 py-1 text-sm">
-                                                    {genre.name}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="mt-4">
                                         <h3 className="text-xl font-semibold mb-2">Production Companies</h3>
                                         <ul className="list-disc list-inside">
                                             {movie.production_companies.map((company: any) => (
