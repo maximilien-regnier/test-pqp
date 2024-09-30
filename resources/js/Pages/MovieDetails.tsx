@@ -87,7 +87,7 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
     );
 }
 
-function InfoItem({ label, value }: { label: string; value: string | number }) {
+function InfoItem({ label, value }: { label: string; value: string | number | null }) {
     return (
         <div>
             <p className="font-semibold">{label}:</p>
