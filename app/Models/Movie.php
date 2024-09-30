@@ -25,6 +25,18 @@ class Movie extends Model
         'video',
         'vote_average',
         'vote_count',
+        'belongs_to_collection',
+        'budget',
+        'genres',
+        'homepage',
+        'imdb_id',
+        'production_companies',
+        'production_countries',
+        'revenue',
+        'runtime',
+        'spoken_languages',
+        'status',
+        'tagline',
     ];
 
     protected $casts = [
@@ -34,5 +46,12 @@ class Movie extends Model
         'popularity' => 'float',
         'vote_average' => 'float',
         'release_date' => 'date',
+        'genres' => 'array',
+        'production_companies' => 'array',
+        'production_countries' => 'array',
+        'spoken_languages' => 'array',
+        'budget' => 'integer',
+        'revenue' => 'integer',
+        'runtime' => 'integer',
     ];
 }

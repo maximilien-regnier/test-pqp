@@ -79,9 +79,52 @@ class TmdbService
         return Http::withHeaders([
             'Authorization' => 'Bearer ' . config('tmdb.api_key'),
             'Content-Type' => 'application/json',
-        ])->get('https://api.themoviedb.org/3/genre/movie/list?language=en', [
+        ])->get('https://api.themoviedb.org/3/genre/movie/list', [
             'language' => 'en',
         ])->json();
     }
 
+    /** 
+     * @throws ConnectionException
+     */
+    public function getAndStoreMovieDetails(int $id): Movie
+    {
+        $movie = Movie::findOrFail($id);
+
+        if ($this->movieNeedsDetails($movie)) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . config('tmdb.api_key'),
+                'Content-Type' => 'application/json',
+            ])->get('https://api.themoviedb.org/3/movie/' . $movie->tmdb_id, [
+                'language' => 'en-US',
+            ])->json();
+
+            $movie->update([
+                'belongs_to_collection' => $response['belongs_to_collection'] ?? null,
+                'budget' => $response['budget'] ?? 0,
+                'genres' => $response['genres'] ?? null,
+                'homepage' => $response['homepage'] ?? null,
+                'imdb_id' => $response['imdb_id'] ?? null,
+                'production_companies' => $response['production_companies'] ?? null,
+                'production_countries' => $response['production_countries'] ?? null,
+                'revenue' => $response['revenue'] ?? 0,
+                'runtime' => $response['runtime'] ?? 0,
+                'spoken_languages' => $response['spoken_languages'] ?? null,
+                'status' => $response['status'] ?? null,
+                'tagline' => $response['tagline'] ?? null,
+            ]);
+
+            $movie->save();
+        }
+        return $movie;
+    }
+
+    private function movieNeedsDetails(Movie $movie): bool
+    {
+        return $movie->budget === 0 ||
+            $movie->revenue === 0 ||
+            $movie->runtime === 0 ||
+            $movie->genres === null ||
+            $movie->production_companies === null;
+    }
 }

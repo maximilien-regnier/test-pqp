@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Services\TmdbService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MoviesController extends Controller
 {
+    private TmdbService $tmdbService;
+
+    public function __construct(TmdbService $tmdbService)
+    {
+        $this->tmdbService = $tmdbService;
+    }
+
     public function trendingMoviesPage()
     {
         return Inertia::render('TrendingMovies');
@@ -43,7 +51,8 @@ class MoviesController extends Controller
 
     public function movieDetails($id)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = $this->tmdbService->getAndStoreMovieDetails($id);
+
         return Inertia::render('MovieDetails', [
             'movie' => $movie
         ]);
